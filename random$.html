@@ -31,7 +31,7 @@
 
       // DIGIT change only after fully scrolled past
       if (offset > textWidth && !digitLocked) {
-        illusionDigit = Math.floor(Math.random() * 10); // 🎲 random digit
+        illusionDigit = Math.floor(Math.random() * 10); 
         offset = -canvas.width; // reset offset to left
         digitLocked = true;
       }
@@ -47,7 +47,6 @@
         const hue = (now.getTime() / 20 + i * 12) % 360;
         ctx.fillStyle = `hsl(${hue},100%,50%)`;
 
-        // pixel-based movement left → right
         ctx.fillText(
           char,
           offset + i * 8,   // 8px spacing per char
@@ -58,13 +57,80 @@
       // set favicon
       document.getElementById("favicon").href = canvas.toDataURL("image/png");
 
-      // update offset (controls speed & direction)
       offset += 0.5; // slow fluid motion
       requestAnimationFrame(updateTabUI);
     }
 
     updateTabUI();
   </script>
+
+  <style>
+    body {
+      font-family: "American Typewriter", serif;
+      text-align: center;
+      margin: 0;
+      padding: 2em;
+      background: #111;
+      color: #eee;
+    }
+    #linkDisplay {
+      font-size: 16px;
+      margin-top: 40px;
+      cursor: pointer;
+      display: inline-block;
+      padding: 10px 20px;
+      border: 1px solid #666;
+      border-radius: 8px;
+      background: #222;
+      transition: all 0.3s ease;
+    }
+    #linkDisplay:hover {
+      background: #333;
+    }
+    iframe {
+      width: 90%;
+      height: 500px;
+      border: none;
+      margin-top: 20px;
+      display: none;
+    }
+  </style>
 </head>
-<body></body>
+<body>
+  <!-- Fake link (disclaimer style) -->
+  <div id="linkDisplay">vicmbugua.wixstudio.com/claude</div>
+  <iframe id="siteFrame"></iframe>
+
+  <script>
+    const linkDisplay = document.getElementById("linkDisplay");
+    const iframe = document.getElementById("siteFrame");
+
+    const fakeLink = "vicmbugua.wixstudio.com/claude";
+    const realLink = "https://vicmbugua.wixstudio.com/claude/file-share/59fa7249-dd0a-41fc-a436-3a00351d6526";
+
+    linkDisplay.addEventListener("click", () => {
+      let steps = [
+        "Opening " + fakeLink + " …",
+        "Loading page …",
+        "Redirecting …",
+        "Final link: " + realLink
+      ];
+      let i = 0;
+
+      function step() {
+        if (i < steps.length) {
+          linkDisplay.textContent = steps[i];
+          i++;
+          setTimeout(step, 1000);
+        } else {
+          iframe.src = realLink;
+          iframe.style.display = "block";
+          linkDisplay.style.display = "none";
+        }
+      }
+
+      step();
+    });
+  </script>
+</body>
 </html>
